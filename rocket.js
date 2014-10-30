@@ -3,39 +3,38 @@ var Rocket = function (position, owner, target) {
   this.size = 1;
   this.team = owner.team;
 
-  this.life = 1000;
-
-  this.target = target;
+  this.life = 100;
 
   this.velocity = new Vec2();
-  this.speed = 0.4;
+  this.direction = new Vec2();
+
+  this.direction.sub(target.position, this.position);
+  this.direction.normalize();
+
+  this.speed = 0;
   
 };
 
 Rocket.prototype.update = function (t) {
 
-  if(this.target){
-    if(this.target.trash){
-      this.target = null
-    }else{
-      this.velocity.sub(this.target.position, this.position);
-      this.velocity.normalize();
-      this.velocity.scale(this.speed);
-    }
-  }
-
-  if(t%1===0){
-    fx.explosion(this.position, 0.2);
-  }
-
-  this.position.add(this.position, this.velocity);
+  this.velocity.copy(this.direction);
+  this.velocity.scale(this.speed);
+  
   this.life -= 1;
-
   if(this.life<=0){
     fx.explosion(this.position, 1);
     this.trash = true;
   }
 
+  if(t%4===0){
+    fx.explosion(this.position, 0.2);
+  }
+
+  this.position.add(this.position, this.velocity);
+
+  this.speed += 0.01;
+  this.speed = Math.min(this.speed, 1);
+  
 };
 
 Rocket.prototype.draw = function () {

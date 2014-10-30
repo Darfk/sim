@@ -7,12 +7,16 @@ var Commander = function (position, team) {
   this.energy = 0;
   this.hit = false;
 
-  this.hp = 3;
+  this.hp = 10;
   
   this.range = 50;
 
   this.diff = new Vec2();
   this.velocity = new Vec2();
+
+  pop[team]++;
+
+  this.buildQueue = [0, 0, 1];
 
 };
 
@@ -34,12 +38,22 @@ Commander.prototype.think = function () {
 }
 
 Commander.prototype.update = function () {
-  this.hit = false;
+  res[this.team] += 3;
 
-  if(this.energy >= 50){
-    spawn(new Fighter(this.position, this.team));
-    this.energy -= 50;
+  switch(this.buildQueue[0]) {
+  case 1:
+    if(buildFighter(this.position, this.team)){
+      this.buildQueue.push(this.buildQueue.shift());
+    }
+    break;
+  case 0:
+    if(buildSheep(this.position, this.team)){
+      this.buildQueue.push(this.buildQueue.shift());
+    }
+    break;
   }
+
+  this.hit = false;
 
   for(var i in entities) {
     var e = entities[i];
@@ -59,6 +73,7 @@ Commander.prototype.update = function () {
 
   if(this.hp <= 0){
     this.trash = true;
+    pop[this.team]--;
     fx.explosion(this.position, 20);
     return;
   }
@@ -68,6 +83,7 @@ Commander.prototype.update = function () {
   this.energy = Math.min(this.energy, 100);
 
   this.position.add(this.position, this.velocity);
+  bounds.moveIn(this);
 };
 
 Commander.prototype.draw = function () {

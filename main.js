@@ -12,13 +12,48 @@ var colors = {
   team:{
     0:"#f88",
     1:"#88f",
+    2:"#8f8",
+    3:"#eee",
   },
   hit: "#fff",
   black: "#000",
   rocket: "#888",
   range: "#800",
+  feel: "#080",
+  personal: "#008",
   boom: "#ff8",
 };
+
+var rescap = 1000;
+
+var res = {
+  0:0,
+  1:0,
+  2:0,
+  3:0,
+};
+
+var popcap = 50;
+
+var pop = {
+  0:0,
+  1:0,
+  2:0,
+  3:0,
+};
+
+var bounds = {
+  left:0,
+  top:0,
+  bottom:200,
+  right:200*aspect,
+  moveIn:function (e) {
+    if(e.position.x > bounds.right) e.position.x = bounds.right;
+    if(e.position.x < bounds.left) e.position.x = bounds.left;
+    if(e.position.y > bounds.bottom) e.position.y = bounds.bottom;
+    if(e.position.y < bounds.top) e.position.y = bounds.top;
+  },
+}
 
 var fxCanvas = document.createElement('canvas');
 fxCanvas.width = height * aspect;
@@ -35,8 +70,38 @@ fx.explosion = function (position, magnitude) {
 var entities = [];
 var newEntities = [];
 
-spawn(new Commander(new Vec2(10, 30), 0));
-spawn(new Commander(new Vec2(80, 30), 1));
+var redCommander = new Commander(new Vec2(bounds.left + 10, bounds.bottom - 10), 0);
+redCommander.buildQueue = [0,1];
+var blueCommander = new Commander(new Vec2(bounds.right - 10, bounds.top + 10), 1);
+blueCommander.buildQueue = [0,0,1,1,1];
+var greenCommander = new Commander(new Vec2(bounds.left + 10, bounds.top + 10), 2);
+greenCommander.buildQueue = [0,1,1,1,1];
+var whiteCommander = new Commander(new Vec2(bounds.right - 10, bounds.bottom - 10), 3);
+whiteCommander.buildQueue = [0,0,1];
+
+spawn(redCommander);
+spawn(blueCommander);
+spawn(greenCommander);
+spawn(whiteCommander);
+
+
+function buildFighter(position, team) {
+  if(res[team] >= 1000 && pop[team] < popcap) {
+    res[team] -= 1000;
+    spawn(new Fighter(position, team));
+    return true;
+  }
+  return false;
+}
+
+function buildSheep(position, team) {
+  if(res[team] >= 300 && pop[team] < popcap) {
+    res[team] -= 300;
+    spawn(new Sheep(position, team));
+    return true;
+  }
+  return false;
+}
 
 function spawn(e) {
   newEntities.push(e);
@@ -49,10 +114,10 @@ function start() {
   function main () {
 
     fx.save();
-    fx.scale(10, 10);
+    fx.scale(cx.canvas.width / bounds.right, cx.canvas.height / bounds.bottom);
     fx.globalAlpha = 1;
 
-    if(timing % 60 === 0){
+    if(timing % 10 === 0){
       for(var i in entities){
         if(typeof entities[i].think === "function") {
           entities[i].think();
@@ -66,6 +131,10 @@ function start() {
       entities.push(newEntities[i]);
     }
     newEntities = [];
+
+    for(var i in res){
+      res[i] = Math.min(res[i], rescap);
+    }
 
     for(var i in entities){
       entities[i].update(timing);
@@ -83,7 +152,7 @@ function start() {
 
     cx.save();
 
-    cx.scale(10, 10);
+    cx.scale(cx.canvas.width / bounds.right, cx.canvas.height / bounds.bottom);
     for(var i in entities){
       entities[i].draw();
     }

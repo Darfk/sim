@@ -61,6 +61,10 @@ Vec2.prototype = {
   },
   dot:function(v){
     return this.x * v.x + this.y * v.y;
+  },
+  zero:function () {
+    this.x = 0; this.y = 0;
+    return this;
   }
 };
 

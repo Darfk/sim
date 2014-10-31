@@ -14,6 +14,8 @@ var Commander = function (position, team) {
   this.diff = new Vec2();
   this.velocity = new Vec2();
 
+  this.diedAt = 0;
+
   pop[team]++;
 
   this.buildQueue = [0, 0, 1];
@@ -37,7 +39,7 @@ Commander.prototype.think = function () {
 
 }
 
-Commander.prototype.update = function () {
+Commander.prototype.update = function (t) {
   res[this.team] += 3;
 
   switch(this.buildQueue[0]) {
@@ -71,13 +73,25 @@ Commander.prototype.update = function () {
     }
   }
 
-  if(this.hp <= 0){
-    this.trash = true;
-    pop[this.team]--;
-    fx.explosion(this.position, 20);
+  if(this.hp <= 0 && !this.diedAt){
+    this.diedAt = t;
     return;
   }
 
+  if(this.diedAt){
+    if(t - this.diedAt > 100) {
+      pop[this.team]--;
+      fx.explosion(this.position, 20);
+      this.trash = true;
+      return;
+    }
+    if(t%8 === 0){
+      fx.explosion({x:this.position.x + Math.random()*40 - 20,
+                    y:this.position.y + Math.random()*40 - 20}, 10);
+    }
+  }
+
+  
   this.energy += 1;
   this.energy = Math.max(this.energy, 0);
   this.energy = Math.min(this.energy, 100);

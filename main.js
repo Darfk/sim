@@ -1,9 +1,21 @@
 var aspect = 16/9;
 var height = 720;
-var canvas = document.createElement('canvas');
-document.body.style.backgroundColor = 'black';
+var canvas = document.createElement("canvas");
+document.body.style.backgroundColor = "black";
 document.body.appendChild(canvas);
-document.documentElement.style.height = '100%';
+document.documentElement.style.height = "100%";
+
+if(window.location.href.indexOf("https://darfk.github.io/") === 0){
+  canvas.style.top = "0";
+  canvas.style.bottom = "0";
+  canvas.style.left = "0";
+  canvas.style.right = "0";
+  canvas.style.position = "absolute";
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
+  
+}
+
 canvas.width = height * aspect;
 canvas.height = height;
 var cx = canvas.getContext("2d");
@@ -70,13 +82,13 @@ fx.explosion = function (position, magnitude) {
 var entities = [];
 var newEntities = [];
 
-var redCommander = new Commander(new Vec2(bounds.left + 10, bounds.bottom - 10), 0);
+var redCommander = new Commander(new Vec2(bounds.left + 50, bounds.bottom - 50), 0);
 redCommander.buildQueue = [0,1];
-var blueCommander = new Commander(new Vec2(bounds.right - 10, bounds.top + 10), 1);
+var blueCommander = new Commander(new Vec2(bounds.right - 50, bounds.top + 50), 1);
 blueCommander.buildQueue = [0,0,1,1,1];
-var greenCommander = new Commander(new Vec2(bounds.left + 10, bounds.top + 10), 2);
+var greenCommander = new Commander(new Vec2(bounds.left + 50, bounds.top + 50), 2);
 greenCommander.buildQueue = [0,1,1,1,1];
-var whiteCommander = new Commander(new Vec2(bounds.right - 10, bounds.bottom - 10), 3);
+var whiteCommander = new Commander(new Vec2(bounds.right - 50, bounds.bottom - 50), 3);
 whiteCommander.buildQueue = [0,0,1];
 
 spawn(redCommander);

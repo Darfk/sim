@@ -16,7 +16,7 @@ var Fighter = function (position, team) {
   this.diff = new Vec2();
 
   this.velocity = new Vec2();
-  this.speed = 0.2;
+  this.speed = 0.4;
   this.direction = new Vec2(Math.random() - 0.5, Math.random() - 0.5);
 
   this.cooldown = 0;
@@ -34,7 +34,7 @@ Fighter.prototype.think = function () {
   for(var i in entities) {
     var e = entities[i];
     if(e === this) continue;
-    if(this.team !== e.team && (e.type === "fighter" || e.type === "sheep")) {
+    if(this.team !== e.team && (e.type === "fighter" || e.type === "sheep" || e.type === "commander")) {
       this.diff.sub(this.position, e.position);
       if(this.diff.magSq() < this.range * this.range + e.size + e.size) {
         newTarget = e;
@@ -84,7 +84,7 @@ Fighter.prototype.update = function () {
 
     var dmsq = this.diff.magSq();
 
-    this.diff.scale(0.001);
+    this.diff.scale(0.002);
     if(dmsq < this.personal * this.personal) {
       this.diff.scale(friends.length);
       this.direction.sub(this.direction, this.diff);
@@ -107,6 +107,13 @@ Fighter.prototype.update = function () {
   }
 
   this.cooldown -= 1;
+
+  if(this.position.y > bounds.bottom - this.feel) this.direction.y -= 0.1;
+  if(this.position.y < bounds.top + this.feel) this.direction.y += 0.1;
+
+  if(this.position.x > bounds.right - this.feel) this.direction.x -= 0.1;
+  if(this.position.x < bounds.left + this.feel) this.direction.x += 0.1;
+  
 
   this.direction.normalize();
   this.velocity.add(this.velocity, this.direction);

@@ -8,7 +8,13 @@ var Rocket = function (position, owner, target) {
   this.velocity = new Vec2();
   this.direction = new Vec2();
 
+  this.velocityOffset = new Vec2();
+
   this.direction.sub(target.position, this.position);
+  this.velocityOffset.add(this.velocityOffset, target.velocity);
+  // because the rocket's velocity is not linear, this gets tricky
+  this.velocityOffset.scale(this.direction.mag() * 1.85);
+  this.direction.add(this.velocityOffset, this.direction);
   this.direction.normalize();
 
   this.speed = 0;

@@ -5,7 +5,7 @@ document.body.style.backgroundColor = "black";
 document.body.appendChild(canvas);
 document.documentElement.style.height = "100%";
 
-if(window.location.href.indexOf("https://darfk.github.io/") === 0){
+if(window.location.host === "darfk.github.io"){
   canvas.style.top = "0";
   canvas.style.bottom = "0";
   canvas.style.left = "0";
@@ -13,7 +13,7 @@ if(window.location.href.indexOf("https://darfk.github.io/") === 0){
   canvas.style.position = "absolute";
   canvas.style.width = "100%";
   canvas.style.height = "100%";
-  
+
 }
 
 canvas.width = height * aspect;
@@ -34,9 +34,10 @@ var colors = {
   feel: "#080",
   personal: "#008",
   boom: "#ff8",
+  res: "#ff8",
 };
 
-var rescap = 1000;
+var rescap = 5000;
 
 var res = {
   0:0,
@@ -85,11 +86,11 @@ var newEntities = [];
 var redCommander = new Commander(new Vec2(bounds.left + 50, bounds.bottom - 50), 0);
 redCommander.buildQueue = [0,1];
 var blueCommander = new Commander(new Vec2(bounds.right - 50, bounds.top + 50), 1);
-blueCommander.buildQueue = [0,0,1,1,1];
+blueCommander.buildQueue = [0,1,1,1,1];
 var greenCommander = new Commander(new Vec2(bounds.left + 50, bounds.top + 50), 2);
 greenCommander.buildQueue = [0,1,1,1,1];
 var whiteCommander = new Commander(new Vec2(bounds.right - 50, bounds.bottom - 50), 3);
-whiteCommander.buildQueue = [0,0,1];
+whiteCommander.buildQueue = [0,1,1];
 
 spawn(redCommander);
 spawn(blueCommander);
@@ -105,6 +106,16 @@ function buildFighter(position, team) {
   }
   return false;
 }
+
+function buildTurret(position, team) {
+  if(res[team] >= 1200 && pop[team] < popcap) {
+    res[team] -= 1200;
+    spawn(new Turret(position, team));
+    return true;
+  }
+  return false;
+}
+
 
 function buildSheep(position, team) {
   if(res[team] >= 300 && pop[team] < popcap) {

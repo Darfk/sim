@@ -12,20 +12,20 @@ var Rocket = function (position, owner, target) {
 
   this.direction.sub(target.position, this.position);
   this.velocityOffset.add(this.velocityOffset, target.velocity);
-  // because the rocket's velocity is not linear, this gets tricky
-  this.velocityOffset.scale(this.direction.mag() * 1.85);
+
+  this.speed = 1;
+  this.velocityOffset.scale(this.direction.mag() * this.speed);
   this.direction.add(this.velocityOffset, this.direction);
   this.direction.normalize();
 
-  this.speed = 0;
-  
+
 };
 
 Rocket.prototype.update = function (t) {
 
   this.velocity.copy(this.direction);
   this.velocity.scale(this.speed);
-  
+
   this.life -= 1;
   if(this.life<=0){
     fx.explosion(this.position, 1);
@@ -38,9 +38,6 @@ Rocket.prototype.update = function (t) {
 
   this.position.add(this.position, this.velocity);
 
-  this.speed += 0.01;
-  this.speed = Math.min(this.speed, 1);
-  
 };
 
 Rocket.prototype.draw = function () {
@@ -51,7 +48,7 @@ Rocket.prototype.draw = function () {
   cx.rotate(Math.atan2(this.velocity.y, this.velocity.x));
   cx.fillRect(-0.4, -0.2, 0.8, 0.4);
   cx.restore();
-  
+
 };
 
 Rocket.prototype.type = "rocket";

@@ -8,7 +8,7 @@ var Fighter = function (position, team) {
   this.hit = false;
 
   this.hp = 3;
-  
+
   this.range = 30;
   this.feel = 30;
   this.personal = 5;
@@ -47,7 +47,7 @@ Fighter.prototype.think = function () {
   }else{
     this.target = null;
   }
-  
+
 }
 
 Fighter.prototype.update = function () {
@@ -128,17 +128,16 @@ Fighter.prototype.update = function () {
 
 Fighter.prototype.draw = function () {
 
-  // if(this.target){
-  //   cx.strokeStyle = colors.range;
-  //   cx.beginPath()
-  //   cx.moveTo(this.position.x, this.position.y);
-  //   cx.lineTo(this.target.position.x, this.target.position.y);
-  //   cx.stroke();
-  // }
+  if(this.target){
+    cx.strokeStyle = colors.range;
+    cx.beginPath()
+    cx.moveTo(this.position.x, this.position.y);
+    cx.lineTo(this.target.position.x, this.target.position.y);
+    cx.stroke();
+  }
 
   cx.save();
   cx.translate(this.position.x, this.position.y);
-
   // cx.save();
   // cx.fillStyle = colors.feel;
   // cx.strokeStyle = colors.feel;
@@ -175,7 +174,7 @@ Fighter.prototype.draw = function () {
   cx.stroke();
 
   cx.restore();
-  
+
 };
 
 Fighter.prototype.type = "fighter";

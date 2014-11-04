@@ -4,11 +4,12 @@ var Sheep = function (position, team) {
   this.team = team;
 
   this.target = null;
+  this.scan = 100;
   this.hit = false;
 
   this.hp = 1;
-  
-  this.velocity = new Vec2();
+
+  this.velocity = new Vec2(Math.random() - 0.5, Math.random() - 0.5);
   this.diff = new Vec2();
 
   pop[team]++;
@@ -17,21 +18,6 @@ var Sheep = function (position, team) {
 Sheep.prototype.speed = 0.1;
 
 Sheep.prototype.think = function () {
-
-  // for(var i in entities) {
-  //   var e = entities[i];
-  //   if(e === this) continue;
-  //   if(e.type === "sheep" && this.team !== e.team) {
-  //     this.diff.sub(this.position, e.position);
-  //     if(this.diff.magSq() < this.range * this.range + e.size + e.size) {
-  //       newTarget = e;
-  //     }
-  //   }
-  // }
-
-  this.velocity.x = Math.random() * 0.5 - 0.25;
-  this.velocity.y = Math.random() * 0.5 - 0.25;
-  
 }
 
 Sheep.prototype.update = function () {
@@ -61,6 +47,7 @@ Sheep.prototype.update = function () {
   }
 
 
+  this.velocity.scale(0.9);
   this.position.add(this.position, this.velocity);
   bounds.moveIn(this);
 };
@@ -81,7 +68,7 @@ Sheep.prototype.draw = function () {
   cx.stroke();
 
   cx.restore();
-  
+
 };
 
 Sheep.prototype.type = "sheep";

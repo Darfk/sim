@@ -8,7 +8,7 @@ var Commander = function (position, team) {
   this.hit = false;
 
   this.hp = 10;
-  
+
   this.range = 50;
 
   this.diff = new Vec2();
@@ -91,7 +91,7 @@ Commander.prototype.update = function (t) {
     }
   }
 
-  
+
   this.energy += 1;
   this.energy = Math.max(this.energy, 0);
   this.energy = Math.min(this.energy, 100);
@@ -109,7 +109,7 @@ Commander.prototype.draw = function () {
   //   cx.lineTo(this.target.position.x, this.target.position.y);
   //   cx.stroke();
   // }
-  
+
   cx.save();
   cx.translate(this.position.x, this.position.y);
 
@@ -137,8 +137,12 @@ Commander.prototype.draw = function () {
   cx.fill();
   cx.stroke();
 
+  cx.textAlign = "center";
+  cx.font = "4px Arial";
+  cx.fillText(res[this.team], 0, -4);
+
   cx.restore();
-  
+
 };
 
 Commander.prototype.type = "commander";
